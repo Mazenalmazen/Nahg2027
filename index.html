@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نهج الاوائل رفيقك الذكي</title>
+</head>
+<body>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    direction: rtl;
+}
+
+header {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+header h2 {
+    margin-bottom: 8px;
+}
+
+header p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.chat-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+}
+
+.grade-select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    background-color: white;
+    cursor: pointer;
+    direction: rtl;
+}
+
+.grade-select:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+
+.toggle-symbols-btn {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.toggle-symbols-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.toggle-symbols-btn.active {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.symbols-panel {
+    display: none;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.symbols-panel.show {
+    display: block;
+}
+
+.symbols-panel .panel-title {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.symbols-category {
+    margin-bottom: 12px;
+}
+
+.symbols-category .cat-title {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 6px;
+    padding-right: 5px;
+    border-right: 3px solid #007BFF;
+}
+
+.symbols-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    direction: rtl;
+    justify-content: flex-start;
+}
+
+.symbol-key {
+    padding: 8px 10px;
+    min-width: 36px;
+    text-align: center;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.symbol-key:hover {
+    background: #007BFF;
+    color: white;
+    border-color: #007BFF;
+    transform: scale(1.1);
+}
+
+.symbol-key.math { border-bottom: 2px solid #e74c3c; }
+.symbol-key.chem { border-bottom: 2px solid #27ae60; }
+.symbol-key.phys { border-bottom: 2px solid #8e44ad; }
+.symbol-key.bio { border-bottom: 2px solid #d35400; }
+.symbol-key.greek { border-bottom: 2px solid #3498db; }
+.symbol-key.super { border-bottom: 2px solid #f39c12; }
+.symbol-key.sub { border-bottom: 2px solid #1abc9c; }
+.symbol-key.arabic { border-bottom: 2px solid #e91e63; }
+
+.question-area {
+    position: relative;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    direction: rtl;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button.clear-btn {
+    background-color: #6c757d;
+    flex: 0 0 auto;
+    min-width: 80px;
+}
+
+button.clear-btn:hover {
+    background-color: #545b62;
+}
+
+.simple-footer {
+    margin-top: 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+}
+
+footer {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 12px;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .symbol-key {
+        padding: 6px 8px;
+        font-size: 14px;
+        min-width: 32px;
+    }
+    
+    .symbols-panel {
+        max-height: 280px;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    button.clear-btn {
+        width: 100%;
+    }
+    
+    textarea {
+        font-size: 16px;
+    }
+}
+</style>
+    <header>
+        <h2>نهج الاوائل رفيقك الذكي</h2>
+        <p>المساعد الذكي المتخصص في منهج نهج الأوائل</p>
+    </header>
+    <main>
+        <div class="chat-container">
+            <select id="gradeSelect" class="grade-select">
+                <option value="" disabled selected>📚 اختر الصف الدراسي...</option>
+                <option value="third">🎓 الصف الثالث الثانوي</option>
+                <option value="tenth">📖 الصف التاسع</option>
+            </select>
+            
+            <button type="button" class="toggle-symbols-btn" id="toggleSymbols" onclick="toggleSymbolsPanel()">
+                <span>🔣</span>
+                <span>إظهار لوحة الرموز العلمية</span>
+            </button>
+            
+            <div class="symbols-panel" id="symbolsPanel">
+                <div class="panel-title">انقر على أي رمز لإدراجه في سؤالك</div>
+                
+                <!-- أرقام عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">أرقام عربية (٠-٩)</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key math" onclick="insertSymbol('٠')">٠</span>
+                        <span class="symbol-key math" onclick="insertSymbol('١')">١</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٢')">٢</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٣')">٣</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٤')">٤</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٥')">٥</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٦')">٦</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٧')">٧</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٨')">٨</span>
+                        <span class="symbol-key math" onclick="insertSymbol('٩')">٩</span>
+                    </div>
+                </div>
+                
+                <!-- متغيرات رياضية عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">متغيرات رياضية عربية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key math" onclick="insertSymbol('س')">س</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ص')">ص</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ع')">ع</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ت')">ت</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ن')">ن</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ق')">ق</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ش')">ش</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ل')">ل</span>
+                        <span class="symbol-key math" onclick="insertSymbol('م')">م</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ك')">ك</span>
+                        <span class="symbol-key math" onclick="insertSymbol('د')">د</span>
+                        <span class="symbol-key math" onclick="insertSymbol('هـ')">هـ</span>
+                        <span class="symbol-key math" onclick="insertSymbol('و')">و</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ز')">ز</span>
+                    </div>
+                </div>
+                
+                <!-- دوال مثلثية عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">دوال مثلثية عربية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key math" onclick="insertSymbol('جا')">جا</span>
+                        <span class="symbol-key math" onclick="insertSymbol('جتا')">جتا</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ظا')">ظا</span>
+                        <span class="symbol-key math" onclick="insertSymbol('قا')">قا</span>
+                        <span class="symbol-key math" onclick="insertSymbol('جا⁻¹')">جا⁻¹</span>
+                        <span class="symbol-key math" onclick="insertSymbol('جتا⁻¹')">جتا⁻¹</span>
+                        <span class="symbol-key math" onclick="insertSymbol('ظا⁻¹')">ظا⁻¹</span>
+                        <span class="symbol-key math" onclick="insertSymbol('قا⁻¹')">قا⁻¹</span>
+                    </div>
+                </div>
+                
+                <!-- مصطلحات رياضية عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">مصطلحات رياضية عربية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key arabic" onclick="insertSymbol('جذر')">جذر</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('تكامل')">تكامل</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('تفاضل')">تفاضل</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('مشتقة')">مشتقة</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('حد')">حد</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('نهاية')">نهاية</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('تسلسل')">تسلسل</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('متسلسلة')">متسلسلة</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('دالة')">دالة</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('مجال')">مجال</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('مدى')">مدى</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('قانون')">قانون</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('مبرهنة')">مبرهنة</span>
+                        <span class="symbol-key arabic" onclick="insertSymbol('نتيجة')">نتيجة</span>
+                    </div>
+                </div>
+                
+                <!-- مصطلحات فيزيائية عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">مصطلحات فيزيائية عربية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key phys" onclick="insertSymbol('سرعة')">سرعة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('تسارع')">تسارع</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('قوة')">قوة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('كتلة')">كتلة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('زخم')">زخم</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('طاقة')">طاقة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('شغل')">شغل</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('قدرة')">قدرة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('جهد')">جهد</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('تيار')">تيار</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('مقاومة')">مقاومة</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('تردد')">تردد</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('طول موجي')">طول موجي</span>
+                    </div>
+                </div>
+                
+                <!-- مصطلحات كيميائية عربية -->
+                <div class="symbols-category">
+                    <div class="cat-title">مصطلحات كيميائية عربية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key chem" onclick="insertSymbol('عنصر')">عنصر</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('مركب')">مركب</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('خليط')">خليط</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('تفاعل')">تفاعل</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('رابطة')">رابطة</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('جزيء')">جزيء</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('ذرة')">ذرة</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('كتلة')">كتلة</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('حجم')">حجم</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('تركيز')">تركيز</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('حامض')">حامض</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('قاعدة')">قاعدة</span>
+                    </div>
+                </div>
+                
+                <!-- أرقام صغيرة علوية -->
+                <div class="symbols-category">
+                    <div class="cat-title">أسس علوية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key super" onclick="insertSymbol('⁰')">⁰</span>
+                        <span class="symbol-key super" onclick="insertSymbol('¹')">¹</span>
+                        <span class="symbol-key super" onclick="insertSymbol('²')">²</span>
+                        <span class="symbol-key super" onclick="insertSymbol('³')">³</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁴')">⁴</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁵')">⁵</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁶')">⁶</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁷')">⁷</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁸')">⁸</span>
+                        <span class="symbol-key super" onclick="insertSymbol('⁹')">⁹</span>
+                    </div>
+                </div>
+                
+                <!-- أرقام صغيرة سفلية -->
+                <div class="symbols-category">
+                    <div class="cat-title">أرقام سفلية (كيمياء)</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key sub" onclick="insertSymbol('₀')">₀</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₁')">₁</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₂')">₂</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₃')">₃</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₄')">₄</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₅')">₅</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₆')">₆</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₇')">₇</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₈')">₈</span>
+                        <span class="symbol-key sub" onclick="insertSymbol('₉')">₉</span>
+                    </div>
+                </div>
+                
+                <!-- حروف يونانية -->
+                <div class="symbols-category">
+                    <div class="cat-title">حروف يونانية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key greek" onclick="insertSymbol('α')">α</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('β')">β</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('γ')">γ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('δ')">δ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ε')">ε</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('θ')">θ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('λ')">λ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('μ')">μ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ν')">ν</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ξ')">ξ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('π')">π</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ρ')">ρ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('σ')">σ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('τ')">τ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('φ')">φ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('χ')">χ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ψ')">ψ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('ω')">ω</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('Δ')">Δ</span>
+                        <span class="symbol-key greek" onclick="insertSymbol('Ω')">Ω</span>
+                    </div>
+                </div>
+                
+                <!-- رموز رياضية -->
+                <div class="symbols-category">
+                    <div class="cat-title">رموز رياضية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key math" onclick="insertSymbol('±')">±</span>
+                        <span class="symbol-key math" onclick="insertSymbol('×')">×</span>
+                        <span class="symbol-key math" onclick="insertSymbol('÷')">÷</span>
+                        <span class="symbol-key math" onclick="insertSymbol('√')">√</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∛')">∛</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∫')">∫</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∂')">∂</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∑')">∑</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∏')">∏</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∞')">∞</span>
+                        <span class="symbol-key math" onclick="insertSymbol('≠')">≠</span>
+                        <span class="symbol-key math" onclick="insertSymbol('≈')">≈</span>
+                        <span class="symbol-key math" onclick="insertSymbol('≤')">≤</span>
+                        <span class="symbol-key math" onclick="insertSymbol('≥')">≥</span>
+                        <span class="symbol-key math" onclick="insertSymbol('°')">°</span>
+                        <span class="symbol-key math" onclick="insertSymbol('→')">→</span>
+                        <span class="symbol-key math" onclick="insertSymbol('⇌')">⇌</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∴')">∴</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∵')">∵</span>
+                        <span class="symbol-key math" onclick="insertSymbol('∝')">∝</span>
+                        <span class="symbol-key math" onclick="insertSymbol('½')">½</span>
+                        <span class="symbol-key math" onclick="insertSymbol('⅓')">⅓</span>
+                        <span class="symbol-key math" onclick="insertSymbol('¼')">¼</span>
+                    </div>
+                </div>
+                
+                <!-- أقواس -->
+                <div class="symbols-category">
+                    <div class="cat-title">أقواس (مهمة للكسور)</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key math" onclick="insertSymbol('(')">(</span>
+                        <span class="symbol-key math" onclick="insertSymbol(')')">)</span>
+                        <span class="symbol-key math" onclick="insertSymbol('[')">[</span>
+                        <span class="symbol-key math" onclick="insertSymbol(']')">]</span>
+                        <span class="symbol-key math" onclick="insertSymbol('{')">{</span>
+                        <span class="symbol-key math" onclick="insertSymbol('}')">}</span>
+                    </div>
+                </div>
+                
+                <!-- رموز كيميائية -->
+                <div class="symbols-category">
+                    <div class="cat-title">رموز كيميائية جاهزة</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key chem" onclick="insertSymbol('H₂O')">H₂O</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('CO₂')">CO₂</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('O₂')">O₂</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('NaCl')">NaCl</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('H₂SO₄')">H₂SO₄</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('NH₃')">NH₃</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('CH₄')">CH₄</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('C₆H₁₂O₆')">C₆H₁₂O₆</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('CaCO₃')">CaCO₃</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('NaOH')">NaOH</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('HCl')">HCl</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('↑')">↑</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('↓')">↓</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('e⁻')">e⁻</span>
+                        <span class="symbol-key chem" onclick="insertSymbol('mol')">mol</span>
+                    </div>
+                </div>
+                
+                <!-- وحدات فيزيائية -->
+                <div class="symbols-category">
+                    <div class="cat-title">وحدات فيزيائية</div>
+                    <div class="symbols-row">
+                        <span class="symbol-key phys" onclick="insertSymbol('N')">N</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('J')">J</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('W')">W</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('V')">V</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('A')">A</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('Ω')">Ω</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('Hz')">Hz</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('m/s')">m/s</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('m/s²')">m/s²</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('kg/m³')">kg/m³</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('Pa')">Pa</span>
+                        <span class="symbol-key phys" onclick="insertSymbol('°C')">°C</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-area">
+                <textarea id="question" placeholder="✍️ اكتب سؤالك هنا... بالعربية أو الإنجليزية"></textarea>
+            </div>
+            
+            <div class="controls">
+                <button id="sendBtn">📤 إرسال للمساعد الذكي</button>
+                <button type="button" class="clear-btn" onclick="clearAll()">🗑️ مسح</button>
+            </div>
+            
+            <div class="simple-footer">
+                <p>منصة نهج الأوائل التعليمية | أ. محمد يحيى فرحان</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 نهج الاوائل . أ/محمديحيى فرحان.</p>
+    </footer>
+    <script>
+    function toggleSymbolsPanel() {
+        const panel = document.getElementById('symbolsPanel');
+        const btn = document.getElementById('toggleSymbols');
+        
+        if (panel.classList.contains('show')) {
+            panel.classList.remove('show');
+            btn.innerHTML = '<span>🔣</span><span>إظهار لوحة الرموز العلمية</span>';
+            btn.classList.remove('active');
+        } else {
+            panel.classList.add('show');
+            btn.innerHTML = '<span>❌</span><span>إخفاء لوحة الرموز</span>';
+            btn.classList.add('active');
+        }
+    }
+    
+    function insertSymbol(symbol) {
+        const textarea = document.getElementById('question');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        
+        textarea.value = text.substring(0, start) + symbol + text.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
+    }
+    
+    function clearAll() {
+        document.getElementById('question').value = '';
+        document.getElementById('gradeSelect').value = '';
+    }
+    
+    function detectLanguage(text) {
+        const arabicPattern = /[\u0600-\u06FF]/;
+        const englishPattern = /[a-zA-Z]/;
+        
+        const hasArabic = arabicPattern.test(text);
+        const hasEnglish = englishPattern.test(text);
+        
+        if (hasArabic && !hasEnglish) return 'arabic';
+        if (!hasArabic && hasEnglish) return 'english';
+        if (hasArabic && hasEnglish) return 'mixed';
+        return 'arabic';
+    }
+    
+    // روابط مراجع الصف الثالث الثانوي الجديدة (مقسمة حسب المادة)
+    const THIRD_GRADE_LINKS = {
+        math: "https://drive.google.com/drive/folders/1kh6k29DcvWMp0FcfWnxQS1zrycVrVJAL",
+        chemistry: "https://drive.google.com/drive/folders/1bwWky3wJUF7m56_NMy1DZmF01k9ec1B8",
+        physics: "https://drive.google.com/drive/folders/1xWnJUdzKZ-c4rn5Ov0xsxfLQJf1hUUkz",
+        biology: "https://drive.google.com/drive/folders/1rmo522DG1LpkZk_oPHtIzsH9s3Fyu9dQ",
+        english: "https://drive.google.com/drive/folders/1KDVMeEEdbtvp3PbwW48TGymLpf5V5ewf"
+    };
+    
+    // روابط الصف التاسع (كما هي)
+    const TENTH_GRADE_LINKS = {
+        all: "https://drive.google.com/drive/folders/1ChogCYGjeMxt8ZWY3sRgm5EWJ_tcCJiy"
+    };
+    
+    const GRADE_NAMES = {
+        third: "الصف الثالث الثانوي",
+        tenth: "الصف التاسع"
+    };
+    
+    const NAHG_LINKS = {
+        telegram: "https://t.me/nahg2023",
+        whatsapp: "https://whatsapp.com/channel/0029VaDEiOtEFeXkCX9nnW1I/430",
+        youtube: "https://youtube.com/@nahgalawel",
+        blog_all3: "https://nahgalawelplatform.blogspot.com/2025/06/blog-post_26.html",
+        blog_all9: "https://nahgalawelplatform.blogspot.com/2025/06/blog-post_27.html"
+    };
+    
+    // كلمات مفتاحية لتحديد المادة من السؤال
+    function detectSubject(question) {
+        const lowerQ = question.toLowerCase();
+        
+        // كلمات مفتاحية للرياضيات
+        const mathKeywords = ['رياضيات', 'رياضة', 'تفاضل', 'تكامل', 'جبر', 'هندسة', 'احتمالات', 'إحصاء', 'دالة', 'متسلسلة', 'نهاية', 'مشتقة', 'تكامل', 'معادلة', 'متباينة', 'مصفوفة', 'محور', 'قطع مكافئ', 'قطع ناقص', 'قطع زائد', 'دائرة', 'مثلث', 'زاوية', 'ضلع', 'محيط', 'مساحة', 'حجم', 'math', 'calculus', 'algebra', 'geometry', 'probability', 'statistics', 'function', 'derivative', 'integral', 'equation', 'matrix'];
+        
+        // كلمات مفتاحية للكيمياء
+        const chemKeywords = ['كيمياء', 'كيميائي', 'عنصر', 'مركب', 'ذرة', 'جزيء', 'رابطة', 'تفاعل', 'معادلة كيميائية', 'مول', 'تركيز', 'حامض', 'قاعدة', 'ملح', 'أكسدة', 'اختزال', 'كهرباء', 'كيمياء عضوية', 'هيدروكربون', 'كحول', 'ألدهيد', 'كيتون', 'كربوكسيل', 'بوليمر', 'chemistry', 'chemical', 'element', 'compound', 'atom', 'molecule', 'bond', 'reaction', 'mole', 'acid', 'base', 'salt', 'oxidation', 'reduction', 'organic'];
+        
+        // كلمات مفتاحية للفيزياء
+        const physKeywords = ['فيزياء', 'فيزيائي', 'حركة', 'سرعة', 'تسارع', 'قوة', 'زخم', 'طاقة', 'شغل', 'قدرة', 'جهد', 'تيار', 'مقاومة', 'سعة', 'حث', 'مغناطيس', 'موجي', 'ضوء', 'صوت', 'حرارة', 'ديناميكا', 'استاتيكا', 'كهرباء', 'مغناطيسية', 'physics', 'motion', 'velocity', 'acceleration', 'force', 'momentum', 'energy', 'work', 'power', 'voltage', 'current', 'resistance', 'capacitance', 'inductance', 'magnetic', 'wave', 'light', 'sound', 'heat', 'electricity', 'electromagnetic'];
+        
+        // كلمات مفتاحية للأحياء
+        const bioKeywords = ['أحياء', 'حيوي', 'خلية', 'نسيج', 'عضو', 'جهاز', 'بكتيريا', 'فيروس', 'فطر', 'نبات', 'حيوان', 'إنسان', 'تنفس', 'بناء ضوئي', 'هضم', 'دوران', 'تنفس', 'إخراج', 'تكاثر', 'وراثة', 'جين', 'كروموسوم', 'حمض نووي', 'بروتين', 'إنزيم', 'هرمون', 'مناعة', 'bioloy', 'biological', 'cell', 'tissue', 'organ', 'system', 'bacteria', 'virus', 'fungus', 'plant', 'animal', 'human', 'photosynthesis', 'respiration', 'digestion', 'circulation', 'reproduction', 'genetics', 'gene', 'chromosome', 'dna', 'protein', 'enzyme', 'hormone', 'immunity'];
+        
+        // كلمات مفتاحية للإنجليزي
+        const engKeywords = ['انجليزي', 'إنجليزي', 'انجليزية', 'إنجليزية', 'english', 'grammar', 'vocabulary', 'reading', 'writing', 'listening', 'speaking', 'essay', 'paragraph', 'sentence', 'verb', 'noun', 'adjective', 'adverb', 'preposition', 'conjunction', 'pronoun', 'tense', 'passive', 'active', 'conditional', 'relative', 'clause', 'phrase', 'idiom', 'literature', 'poem', 'novel', 'story'];
+        
+        // عدد التطابقات لكل مادة
+        let mathScore = mathKeywords.filter(k => lowerQ.includes(k)).length;
+        let chemScore = chemKeywords.filter(k => lowerQ.includes(k)).length;
+        let physScore = physKeywords.filter(k => lowerQ.includes(k)).length;
+        let bioScore = bioKeywords.filter(k => lowerQ.includes(k)).length;
+        let engScore = engKeywords.filter(k => lowerQ.includes(k)).length;
+        
+        // إذا لم يتم التعرف على أي مادة، نُرجع 'all' لاستخدام جميع الروابط
+        const maxScore = Math.max(mathScore, chemScore, physScore, bioScore, engScore);
+        if (maxScore === 0) return 'all';
+        
+        // تحديد المادة ذات أعلى نتيجة
+        const scores = [
+            { subject: 'math', score: mathScore },
+            { subject: 'chemistry', score: chemScore },
+            { subject: 'physics', score: physScore },
+            { subject: 'biology', score: bioScore },
+            { subject: 'english', score: engScore }
+        ];
+        
+        scores.sort((a, b) => b.score - a.score);
+        return scores[0].subject;
+    }
+    
+    function getDriveLinksForQuestion(grade, question) {
+        if (grade === 'tenth') {
+            return TENTH_GRADE_LINKS.all;
+        }
+        
+        // للصف الثالث الثانوي: تحديد المادة من السؤال
+        const subject = detectSubject(question);
+        
+        if (subject === 'all') {
+            // إذا لم يتم التعرف على المادة، نُرجع جميع الروابط
+            return `جميع مواد ${GRADE_NAMES.third}:
+• الرياضيات: ${THIRD_GRADE_LINKS.math}
+• الكيمياء: ${THIRD_GRADE_LINKS.chemistry}
+• الفيزياء: ${THIRD_GRADE_LINKS.physics}
+• الأحياء: ${THIRD_GRADE_LINKS.biology}
+• الإنجليزي: ${THIRD_GRADE_LINKS.english}`;
+        }
+        
+        // إرجاع رابط المادة المحددة مع اسمها
+        const subjectNames = {
+            math: 'الرياضيات',
+            chemistry: 'الكيمياء',
+            physics: 'الفيزياء',
+            biology: 'الأحياء',
+            english: 'الإنجليزي'
+        };
+        
+        return `مراجع مادة ${subjectNames[subject]} للصف الثالث الثانوي: ${THIRD_GRADE_LINKS[subject]}`;
+    }
+    
+    function buildEncryptedPrompt(grade, userQuestion, lang) {
+        const driveLinks = getDriveLinksForQuestion(grade, userQuestion);
+        const gradeName = GRADE_NAMES[grade];
+        
+        let mathInstructions = '';
+        
+        if (lang === 'arabic' || lang === 'mixed') {
+            mathInstructions = `
+📐 تنسيق القوانين والمبرهنات والمعادلات الرياضية (باللغة العربية فقط):
+
+⛔⛔⛔ ممنوع تماماً استخدام أي مصطلح إنجليزي في الرياضيات ⛔⛔⛔
+
+✅ المتغيرات العربية الإلزامية:
+   • س ← بدلاً من x
+   • ص ← بدلاً من y
+   • ع ← بدلاً من z
+   • ت ← بدلاً من t
+   • ن ← بدلاً من n
+   • ق ← بدلاً من F (قوة)
+   • ك ← بدلاً من m (كتلة)
+   • تس ← بدلاً من a (تسارع)
+   • ش ← بدلاً من v (سرعة)
+   • ط ← بدلاً من d (مسافة/طول)
+   • ز ← بدلاً من T (زمن/دورة)
+
+✅ الدوال المثلثية العربية:
+   • جا(الزاوية) ← بدلاً من sin
+   • جتا(الزاوية) ← بدلاً من cos
+   • ظا(الزاوية) ← بدلاً من tan
+   • قا(الزاوية) ← بدلاً من cot
+   • قا(الزاوية) ← بدلاً من sec
+   • قتا(الزاوية) ← بدلاً من csc
+
+✅ العمليات الرياضية العربية:
+   • جذر(المقدار) ← بدلاً من √ أو sqrt
+   • تكامل(المقدار) ← بدلاً من ∫
+   • تفاضل(المقدار) ← بدلاً من ∂ أو d/dx
+   • مشتقة(المقدار) ← بدلاً من derivative
+   • نهاية(المقدار) ← بدلاً من limit
+   • مجموع(المقدار) ← بدلاً من sum
+   • جداء(المقدار) ← بدلاً من product
+   • لوغاريتم(المقدار) ← بدلاً من log
+   • أس(الأساس، الأس) ← بدلاً من power
+
+✅ القوانين الفيزيائية بالعربية:
+   • قانون نيوتن الثاني: (القوة) = (الكتلة) × (التسارع) → (ق) = (ك) × (تس)
+   • قانون أوم: (الجهد) = (التيار) × (المقاومة) → (ج) = (ت) × (م)
+   • قانون بويل: (الضغط الأول) × (الحجم الأول) = (الضغط الثاني) × (الحجم الثاني)
+   • قانون شارل: (الحجم) ÷ (درجة الحرارة) = ثابت
+
+✅ المبرهنات الرياضية بالعربية:
+   • مبرهنة فيثاغورس: في المثلث قائم الزاوية، مربع وتر يساوي مجموع مربعي الضلعين
+   • مبرهنة التطابق: إذا تطابق مثلثان، فإن أضلاعهما المتناظرة متساوية
+   • مبرهنة نهاية الدالة: نهاية (س) عندما (س ← أ)
+
+✅ النتائج والخواص بالعربية:
+   • خاصية التوزيع: (أ) × ((ب) + (ج)) = (أ × ب) + (أ × ج)
+   • خاصية التبديل: (أ) + (ب) = (ب) + (أ)
+   • خاصية الت associativity: ((أ) + (ب)) + (ج) = (أ) + ((ب) + (ج))
+
+🔢 الأرقام: ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩
+🔢 الكسور: (البسط) ÷ (المقام) ← دائماً بين قوسين
+🔢 الأسس: (الأساس)² أو (الأساس)³
+🔢 الجذور: جذر(المقدار) أو ∛(المقدار)
+
+📌 أمثلة على قوانين عربية:
+❌ ممنوع: Newton's second law: F = ma
+✅ لازم: قانون نيوتن الثاني للحركة: (القوة) = (الكتلة) × (التسارع) → (ق) = (ك) × (تس)
+
+❌ ممنوع: Pythagorean theorem: a² + b² = c²
+✅ لازم: مبرهنة فيثاغورس: (طول الضلع الأول)² + (طول الضلع الثاني)² = (طول الوتر)² → (س)² + (ص)² = (ع)²
+
+❌ ممنوع: Ohm's law: V = IR
+✅ لازم: قانون أوم: (الجهد الكهربائي) = (شدة التيار) × (المقاومة) → (ج) = (ت) × (م)
+
+❌ ممنوع: derivative of x² is 2x
+✅ لازم: مشتقة (س²) = (٢س)`;
+        } else {
+            mathInstructions = `
+📐 Math Format (English only):
+
+Use standard English mathematical notation with Arabic numerals:
+• Variables: x, y, z, t, n, F, m, a, v, d, T
+• Functions: sin(x), cos(x), tan(x), cot(x), sec(x), csc(x)
+• Operations: sqrt(expression), ∫(expression)dx, d/dx(expression), limit(expression), sum, product, log(expression)
+• Laws: Newton's second law F=ma, Ohm's law V=IR, Boyle's law P₁V₁=P₂V₂
+• Theorems: Pythagorean theorem a²+b²=c², congruence theorem, limit theorem`;
+        }
+        
+        return `أنت "المساعد الذكي – نهج الأوائل"، منصة تعليمية شعارها "على قدر أهل العزم تأتي العزائم" - أ. محمد يحيى فرحان.
+
+⚠️ تنبيه: منصة نهج الأوائل لا تتبع أي مدرسة أهلية؛ فالحذر من المدارس/المعاهد التي تنتحل هذا الاسم.
+
+🛠 نظام RAG: Backend بتقنية Retrieval-Augmented Generation مع LLM مجاني. ملفات PDF تُستورد تلقائياً.
+
+📚 مراجعك: ${driveLinks}
+
+🔒 قواعد سلوكك الصارمة:
+
+1. بداية الإجابة الإلزامية:
+   ✅ ابدأ كل إجابة بـ: "أهلاً بطالب منصة نهج الأوائل"
+   ✅ ثم انتقل مباشرة للإجابة
+
+2. لغة القوانين والمبرهنات:
+   ⛔ ممنوع كتابة القوانين بالإنجليزية إذا السؤال عربي
+   ✅ لازم تكتب القوانين بالعربية:
+      - "قانون نيوتن الثاني" وليس "Newton's second law"
+      - "مبرهنة فيثاغورس" وليس "Pythagorean theorem"
+      - "قانون أوم" وليس "Ohm's law"
+      - "قانون بويل" وليس "Boyle's law"
+      - "قانون شارل" وليس "Charles's law"
+      - "قانون جاي لوساك" وليس "Gay-Lussac's law"
+
+3. لغة النتائج والخواص:
+   ⛔ ممنوع: "property", "theorem", "law", "rule", "formula"
+   ✅ لازم: "خاصية", "مبرهنة", "قانون", "قاعدة", "صيغة"
+
+4. الروابط:
+   ⛔ ممنوع أي روابط خارجية
+   ✅ إذا طلب الطالب روابط، قدم فقط:
+      - تليجرام: ${NAHG_LINKS.telegram}
+      - واتساب: ${NAHG_LINKS.whatsapp}
+      - يوتيوب: ${NAHG_LINKS.youtube}
+      - مدونة الثالث ثانوي: ${NAHG_LINKS.blog_all3}
+      - مدونة التاسع: ${NAHG_LINKS.blog_all9}
+
+5. التعريف بمنصة نهج الأوائل:
+   ⛔ ممنوع الاعتماد على مصادر خارجية
+   ✅ اعتمد فقط على:
+      - اسم المنصة: منصة نهج الأوائل التعليمية
+      - المؤسس: أ. محمد يحيى فرحان
+      - الشعار: "على قدر أهل العزم تأتي العزائم"
+      - الهدف: خدمة طلاب الثالث الثانوي والتاسع
+      - المحتوى: ملخصات، بنوك أسئلة وزارية، اختبارات إلكترونية، مسابقات
+      - التواصل: تليجرام، واتساب، يوتيوب، مدونة Blogger
+      - التحذير: لا تتبع أي مدرسة أهلية
+
+${mathInstructions}
+
+❌ ممنوعات في الإجابة:
+- لا تظهر الرموز: 🎯 🛠 ⚠️ 📚 🔒 📐 ❌ ✅ ⛔
+- لا تذكر "Google Drive" أو "Backend" أو "RAG" أو "LLM"
+- لا تبدأ بـ "أنا مساعد ذكي"
+- لا تذكر أنك "تم تدريبي على بيانات حتى تاريخ معين"
+- لا تقدم روابط خارجية أبداً
+
+✅ طريقة الرد الإلزامية:
+1. ابدأ دائماً بـ: "أهلاً بطالب منصة نهج الأوائل"
+2. اكتب القوانين والمبرهنات بلغة السؤال
+3. اكتب المتغيرات بلغة السؤال
+4. اكتب النتائج والخواص بلغة السؤال
+5. إذا طلب المراجع، قدم فقط روابط منصة نهج الأوائل
+
+السؤال الآن: ${userQuestion}`;
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const sendBtn = document.getElementById("sendBtn");
+        const questionInput = document.getElementById("question");
+        const gradeSelect = document.getElementById("gradeSelect");
+
+        sendBtn.addEventListener("click", function() {
+            const grade = gradeSelect.value;
+            const userQuestion = questionInput.value.trim();
+
+            if (!grade) {
+                alert("⚠️ يرجى اختيار الصف الدراسي أولاً.");
+                gradeSelect.focus();
+                return;
+            }
+
+            if (userQuestion === "") {
+                alert("⚠️ يرجى إدخال سؤالك.");
+                questionInput.focus();
+                return;
+            }
+
+            const lang = detectLanguage(userQuestion);
+            const fullPrompt = buildEncryptedPrompt(grade, userQuestion, lang);
+            const encodedPrompt = encodeURIComponent(fullPrompt);
+            const aiUrl = "https://chat.openai.com/?q=" + encodedPrompt;
+            
+            if (aiUrl.length > 8000) {
+                const shortPrompt = lang === 'english' 
+                    ? `You are "Nahg Alawel" assistant. Start with "أهلاً بطالب منصة نهج الأوائل". Write laws in Arabic if question is Arabic. Use Arabic variables: س, ص, ع. No external links. Question: ${userQuestion}`
+                    : `أنت مساعد "نهج الأوائل". ابدأ بـ "أهلاً بطالب منصة نهج الأوائل". اكتب القوانين والمبرهنات بالعربية. استخدم المتغيرات العربية: س، ص، ع. لا روابط خارجية. السؤال: ${userQuestion}`;
+                window.location.href = "https://chat.openai.com/?q=" + encodeURIComponent(shortPrompt);
+            } else {
+                window.location.href = aiUrl;
+            }
+        });
+    });
+    </script>
+</body>
+</html>
